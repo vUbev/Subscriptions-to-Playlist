@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Subscriptions to Playlist</title>
+  <style>
+    :root { color-scheme: light dark; --accent: #4f46e5; }
+    body { font: 15px/1.5 system-ui, sans-serif; max-width: 720px; margin: 32px auto; padding: 0 16px 48px; }
+    h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+    h2 { font-size: 1.05rem; margin: 2rem 0 .25rem; }
+    p.lead { margin: 0; opacity: .75; }
+    label.field { display: block; font-weight: 600; margin-top: 1.25rem; }
+    .hint { font-weight: 400; opacity: .7; font-size: .85rem; display: block; margin: .15rem 0 .4rem; }
+    input[type=text], textarea {
+      width: 100%; box-sizing: border-box; padding: 8px 10px; font: inherit;
+      border: 1px solid #8886; border-radius: 6px; background: Canvas; color: CanvasText;
+    }
+    input[type=number] {
+      width: 4.5em; padding: 3px 6px; font: inherit; border: 1px solid #8886; border-radius: 6px;
+      background: Canvas; color: CanvasText;
+    }
+    textarea { min-height: 180px; font-family: ui-monospace, monospace; font-size: 14px; }
+    .check { display: block; margin-top: .6rem; }
+    .check small { display: block; margin-left: 1.65rem; opacity: .7; }
+    .sub { margin: .3rem 0 0 1.65rem; opacity: .85; font-size: .9rem; }
+    .row { display: flex; gap: 8px; align-items: center; margin-top: 1.25rem; flex-wrap: wrap; }
+    button { font: inherit; padding: 7px 14px; border-radius: 6px; border: 1px solid #8886; cursor: pointer; background: ButtonFace; color: ButtonText; }
+    button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    #status { margin-left: 4px; }
+    #status.error { color: #d33; }
+    ul#log {
+      list-style: none; padding: 0; margin: .5rem 0; max-height: 320px; overflow: auto;
+      font: 13px/1.4 ui-monospace, monospace; border: 1px solid #8884; border-radius: 6px;
+    }
+    ul#log li { padding: 5px 10px; border-bottom: 1px solid #8883; }
+    ul#log li:last-child { border-bottom: 0; }
+    li.ok { color: #1a9c4a; }
+    li.error { color: #d33; }
+    .time { opacity: .6; margin-right: 8px; color: CanvasText; }
+  </style>
+</head>
+<body>
+  <h1>Subscriptions to Playlist</h1>
+  <p class="lead">While you're on your Subscriptions feed, videos from the channels below are added to your playlist if they aren't in it already. Changes on this page save automatically.</p>
+
+  <label class="check">
+    <input type="checkbox" id="enabled"> Enabled
+  </label>
+  <label class="check">
+    <input type="checkbox" id="dryRun"> Dry run
+    <small>Only write what <em>would</em> be added to the activity log below. Handy for checking your channel list first.</small>
+  </label>
+  <label class="check">
+    <input type="checkbox" id="skipWatched"> Skip videos I've already watched
+    <small>Uses the progress bar YouTube draws on the thumbnails of videos you've watched.</small>
+  </label>
+  <div class="sub">
+    Count a video as watched once at least <input type="number" id="watchedMin" min="1" max="100"> % of it is watched.
+  </div>
+  <label class="check">
+    <input type="checkbox" id="showButton"> Show the add/remove button when hovering a thumbnail
+    <small>Red: channel isn't on your list (click to add). Green: it is (click to remove). A "!" badge means you aren't subscribed to that channel.</small>
+  </label>
+
+  <label class="field" for="playlist">Playlist URL
+    <span class="hint">Any URL containing <code>list=…</code>, or just the playlist ID. Defaults to Watch Later (<code>list=WL</code>). It must be a playlist you own.</span>
+  </label>
+  <input type="text" id="playlist" spellcheck="false">
+
+  <label class="field" for="channels">Channels
+    <span class="hint">One per line: a channel name, an @handle, or a channel URL. Lines starting with # are ignored. The hover button edits this list too.</span>
+  </label>
+  <textarea id="channels" spellcheck="false" placeholder="@SomeChannel&#10;https://www.youtube.com/@SomeChannel&#10;Some Channel Name"></textarea>
+
+  <div class="row">
+    <span id="status" role="status" aria-live="polite"></span>
+  </div>
+
+  <h2>Activity</h2>
+  <ul id="log"></ul>
+  <div class="row" style="margin-top:.5rem">
+    <button id="clearLog">Clear log</button>
+    <button id="forget">Forget history</button>
+    <span><span id="handledCount">0</span> videos remembered as handled</span>
+  </div>
+
+  <script src="shared.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

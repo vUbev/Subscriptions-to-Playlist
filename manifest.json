@@ -1,0 +1,29 @@
+{
+  "manifest_version": 2,
+  "name": "Subscriptions to Playlist",
+  "version": "1.0",
+  "description": "Automatically adds new videos from channels you choose (seen on your YouTube Subscriptions feed) to a playlist, with a hover button to add or remove channels.",
+  "icons": { "48": "icon.svg", "96": "icon.svg" },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "substoplaylist@ube",
+      "strict_min_version": "142.0",
+      "data_collection_permissions": { "required": ["none"] }
+    }
+  },
+  "incognito": "not_allowed",
+  "permissions": ["storage"],
+  "browser_action": {
+    "default_icon": "icon.svg",
+    "default_title": "Subscriptions to Playlist: settings"
+  },
+  "background": { "scripts": ["background.js"], "persistent": false },
+  "options_ui": { "page": "options.html", "open_in_tab": true },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["shared.js", "innertube.js", "content.js", "button.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
